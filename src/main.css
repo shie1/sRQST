@@ -1,0 +1,154 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300&display=swap');
+
+@keyframes close {
+    0% {
+        transform: translateX(0%);
+    }
+
+    100% {
+        transform: translateX(100%);
+    }
+}
+
+@keyframes wrap {
+    0% {
+        transform: translateY(10%);
+    }
+
+    100% {
+        transform: scale(1, 0);
+        transform: translateY(100%);
+    }
+}
+
+* {
+    --header-size: 32.5px;
+    font-family: 'Montserrat', sans-serif;
+    user-select: none;
+    overflow: hidden;
+}
+
+*::-webkit-scrollbar {
+    display: none;
+}
+
+.dragarea {
+    display: flex;
+    -webkit-app-region: drag;
+    height: 100%;
+    width: calc(100% - 212.5px);
+    justify-content: center;
+}
+
+body {
+    position: static;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    transition: 500ms;
+}
+
+header {
+    position: fixed;
+    width: 100vw;
+    height: var(--header-size);
+    background-color: #202124;
+    color: white;
+}
+
+header div {
+    width: 100vw;
+    height: var(--header-size);
+    position: relative;
+    left: 0;
+    display: flex;
+    flex-direction: row-reverse;
+}
+
+header div * {
+    overflow: visible;
+}
+
+header div div {
+    margin-right: 5px;
+    height: var(--header-size);
+    width: var(--header-size);
+
+}
+
+header div div img {
+    padding: calc(var(--header-size) / 10);
+    width: calc(var(--header-size) / 1.25);
+    filter: invert(1);
+}
+
+header div div span {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: calc(var(--header-size) / 1.25);
+}
+
+#closeApp {
+    transition: 100ms;
+}
+
+#closeApp:hover {
+    background-color: #e60000;
+}
+
+.headerB {
+    transition: 100ms;
+}
+
+.headerB:hover {
+    background-color: #454545;
+}
+
+.content {
+    display: flex;
+    flex-direction: column;
+    transform: translateY(var(--header-size));
+    padding-top: var(--header-size);
+    background-color: #3D3D45;
+    width: 100%;
+    height: calc(100vh - var(--header-size));
+    color: #F9F871;
+    justify-content: center;
+    align-items: center;
+    transition: 100ms ease-in-out;
+}
+
+.concode {
+    font-size: 4vw;
+    font-weight: 500;
+    text-align: center;
+}
+
+.concode .mid {
+    font-size: 10vw;
+}
+
+footer {
+    position: fixed;
+    width: 100vw;
+    height: var(--header-size);
+    background-color: #202124;
+    color: white;
+}
+
+footer div {
+    width: 100vw;
+    height: var(--header-size);
+    position: relative;
+    left: 0;
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: center;
+    align-items: center;
+}
+
+.dragging {
+    filter: blur(2.5px);
+}

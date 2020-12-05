@@ -1,0 +1,54 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>sQRST Video Converter</title>
+    <link rel="stylesheet" href="main.css">
+</head>
+
+<body>
+
+    <header>
+        <div>
+            <div id="closeApp">
+                <img draggable="false" src="icons/close.svg">
+            </div>
+            <div class="headerB" id="clip">
+                <img draggable="false" src="icons/document.svg">
+            </div>
+            <div class="headerB" id="goCreds">
+                <img draggable="false" src="icons/user.svg">
+            </div>
+            <div class="dragarea"></div>
+            <div>
+                <span>sRQST</span>
+            </div>
+        </div>
+    </header>
+
+    <div class="content">
+        <div class="concode">
+            <span class="up">
+                Drag in a youtube video, to start
+            </span>
+            <br>
+            <span class="mid">
+                DOWNLOADING
+            </span>
+        </div>
+    </div>
+
+    <footer>
+        <div>
+            <span id="alert"></span>
+        </div>
+    </footer>
+
+    <script>
+        window.$ = window.jQuery = require('jquery');
+    </script>
+    <script src="render.js"></script>
+</body>
+
+</html>
