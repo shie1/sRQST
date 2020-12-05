@@ -144,8 +144,8 @@ async function convert(link) {
         '-itsoffset', '0', '-i', 'pipe:4',
         '-i', 'pipe:5',
         // Choose some fancy codes
-        '-c:v', 'libx265', '-x265-params', 'log-level=0',
-        '-c:a', 'flac',
+        '-c:v', 'libx264', '-x264-params', 'log-level=0',
+        '-c:a', 'libmp3lame',
         // Define output container
         '-f', 'matroska', 'pipe:6',
     ], {
