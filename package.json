@@ -1,6 +1,6 @@
 {
     "name": "srqst",
-    "productName": "srqst",
+    "productName": "sRQST",
     "version": "1.0.0",
     "description": "Simple YouTube converter",
     "main": "src/index.js",
@@ -25,7 +25,7 @@
             "makers": [{
                     "name": "@electron-forge/maker-squirrel",
                     "config": {
-                        "name": "tron_forge"
+                        "name": "sRQST"
                     }
                 },
                 {
