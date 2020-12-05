@@ -136,17 +136,17 @@ async function convert(link) {
         alert(`"${title}" | Running for: ${Math.floor((Date.now() - tracker.start) / 1000)} seconds`);
     }, 800);
     ffmpegProcess = cp.spawn(ffmpeg, [
-        // Remove ffmpeg's console spamming
+        // Disable logs
         '-loglevel', '0', '-hide_banner',
-        // Redirect/enable progress messages
+        // Redirect progress messages
         '-progress', 'pipe:3',
         // 0 second audio offset
         '-itsoffset', '0', '-i', 'pipe:4',
         '-i', 'pipe:5',
-        // Choose some fancy codes
+        // Codecs
         '-c:v', 'libx264', '-x264-params', 'log-level=0',
         '-c:a', 'libmp3lame',
-        // Define output container
+        // Output container (file extension)
         '-f', 'matroska', 'pipe:6',
     ], {
         windowsHide: true,
