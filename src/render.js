@@ -20,7 +20,7 @@ function copy(text) {
 
 function alert(text, ms) {
     $('#alert').text(text)
-    $('.content').css('height', 'calc(100vh - var(--header-size) * 2')
+    $('.content').css('height', 'calc(100vh - var(--header-size) * 2)')
     if (!ms) {
         return
     }
