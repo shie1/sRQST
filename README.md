@@ -11,3 +11,4 @@ To convert a video, simply drag and drop one to the app, or copy it's URL and cl
 - Audio & Video reencoding source code: [TimeForANinja](https://github.com/TimeForANinja)
 - Icons: Smashicons from flaticon.com
 - Made with: nodejs, ffmpeg, jquery, ytdl-core, electron, electron-forge
+- Made with: nodejs, ffmpeg, jquery, ytdl-core, electron, electron-forge
