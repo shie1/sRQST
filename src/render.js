@@ -148,11 +148,6 @@ async function convert(link) {
         // Encoding
         '-c:v', 'libx264',
         '-c:a', 'aac',
-        '-strict', 'experimental',
-        '-tune', 'fastdecode',
-        '-pix_fmt', 'yuv420p',
-        '-b:a', '192k',
-        '-ar', '48000',
         // Output container (file extension)
         '-f', 'matroska', 'pipe:6',
     ], {
@@ -186,5 +181,7 @@ async function convert(link) {
     });
     audio.pipe(ffmpegProcess.stdio[4]);
     video.pipe(ffmpegProcess.stdio[5]);
-    ffmpegProcess.stdio[6].pipe(fs.createWriteStream(`downloads/${title.replace(/[^a-z0-9]/gi, '_').toLowerCase()}.mp4`));
+    filepath = `downloads/${title.replace(/[^a-z0-9]/gi, '_').toLowerCase()}.mp4`
+    ffmpegProcess.stdio[6].pipe(fs.createWriteStream(filepath));
+    cp.execFileSync('ffmpeg', ['-y', '-i', path.resolve(filepath), '-c:v', 'libx264', '-c:a', 'aac', '-strict', 'experimental', '-tune', 'fastdecode', '-pix_fmt', 'yuv420p', '-b:a', '192k', '-ar', '48000', path.resolve(filepath)])
 }
