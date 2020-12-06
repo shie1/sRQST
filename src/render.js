@@ -95,7 +95,7 @@ async function convert(link) {
         alert('This is not a YouTube video!', 1500)
         return;
     }
-    title = (await ytdl.getBasicInfo(link)).videoDetails.title.replace(/|/g, '').replace(/"/, '')
+    title = (await ytdl.getBasicInfo(link)).videoDetails.title.replace(/|/g, '').replace(/"/g, '')
     tracker = {
         start: Date.now(),
         audio: {
@@ -140,12 +140,15 @@ async function convert(link) {
         '-loglevel', '0', '-hide_banner',
         // Redirect progress messages
         '-progress', 'pipe:3',
-        // 0 second audio offset
-        '-itsoffset', '0', '-i', 'pipe:4',
+        // Sources
+        '-i', 'pipe:4',
         '-i', 'pipe:5',
-        // Codecs
-        '-c:v', 'libx264', '-x264-params', 'log-level=0',
-        '-c:a', 'libmp3lame',
+        // Overwrite
+        '-y',
+        // Encoding
+        '-c:v', 'libx265', // H.264 Video Coding
+        '-c:a', 'aac', // AAC Audio Coding
+        '-b:a', '192k', // Audio quality
         // Output container (file extension)
         '-f', 'matroska', 'pipe:6',
     ], {
