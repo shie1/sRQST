@@ -146,9 +146,13 @@ async function convert(link) {
         // Overwrite
         '-y',
         // Encoding
-        '-c:v', 'libx265', // H.264 Video Coding
-        '-c:a', 'aac', // AAC Audio Coding
-        '-b:a', '192k', // Audio quality
+        '-c:v', 'libx264',
+        '-c:a', 'aac',
+        '-strict', 'experimental',
+        '-tune', 'fastdecode',
+        '-pix_fmt', 'yuv420p',
+        '-b:a', '192k',
+        '-ar', '48000',
         // Output container (file extension)
         '-f', 'matroska', 'pipe:6',
     ], {
