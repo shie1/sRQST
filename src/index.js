@@ -14,12 +14,16 @@ if (require('electron-squirrel-startup')) { // eslint-disable-line global-requir
 try {
     fs.readFileSync('./credits.txt')
     fs.readdirSync('./downloads')
+    fs.readdirSync('./temp')
 } catch (error) {
     try {
         fs.mkdirSync('./downloads')
     } catch (error) {}
     try {
         fs.writeFileSync('./credits.txt', '| 2020 December 5\n| Design and development: Shie1\n| Electron app template: Fireship (https://www.youtube.com/channel/UCsBjURrPoezykLs9EqgamOA)\n| Audio & Video reencoding source code: TimeForANinja (https://github.com/TimeForANinja)\n| Icons: Smashicons from flaticon.com\n| Made with:\n    nodejs\n    ffmpeg\n    jquery\n    ytdl-core\n    electron\n    electron-forge')
+    } catch (error) {}
+    try {
+        fs.mkdirSync('./temp')
     } catch (error) {}
 }
 
@@ -32,7 +36,7 @@ const createWindow = () => {
         frame: false,
         resizable: false,
         webPreferences: {
-            //devTools: false,
+            devTools: false,
             nodeIntegration: true
         }
     });
