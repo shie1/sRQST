@@ -1,13 +1,13 @@
 {
     "name": "srqst",
     "productName": "sRQST",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "description": "Simple YouTube converter",
     "main": "src/index.js",
     "scripts": {
         "start": "electron-forge start",
         "package": "electron-forge package",
-        "make": "electron-forge make",
+        "make": "electron-forge make --arch x64 && electron-forge make --arch ia32",
         "publish": "electron-forge publish",
         "lint": "echo \"No linting configured\""
     },
