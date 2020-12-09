@@ -5,9 +5,6 @@ To convert a video, simply drag and drop one to the app, or copy it's URL and cl
 
 <img height=400 src="https://i.imgur.com/TvAUF4B.png">
 
-## Known Issues
-- The video output is not Sony/Magix Vegas compatible
-
 ## Credits
 - Design and development: [Shie1](https://github.com/shie1)
 - Electron app template: [Fireship](https://www.youtube.com/channel/UCsBjURrPoezykLs9EqgamOA)
