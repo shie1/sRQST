@@ -22,7 +22,8 @@
             "packagerConfig": {
                 "icon": "icon.ico"
             },
-            "makers": [{
+            "makers": [
+                {
                     "name": "@electron-forge/maker-squirrel",
                     "config": {
                         "name": "sRQST"
@@ -49,7 +50,8 @@
         "electron-squirrel-startup": "^1.0.0",
         "ffmpeg-static": "^4.2.7",
         "jquery": "^3.5.1",
-        "ytdl-core": "^4.1.2"
+        "screenz": "^1.0.0",
+        "ytdl-core": "latest"
     },
     "devDependencies": {
         "@electron-forge/cli": "^6.0.0-beta.50",

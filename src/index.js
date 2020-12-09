@@ -5,6 +5,10 @@ const {
 const path = require('path');
 const fs = require('fs')
 const cp = require('child_process')
+const {
+    width,
+    height
+} = require("screenz");
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) { // eslint-disable-line global-require
@@ -12,15 +16,11 @@ if (require('electron-squirrel-startup')) { // eslint-disable-line global-requir
 }
 
 try {
-    fs.readFileSync('./credits.txt')
     fs.readdirSync('./downloads')
     fs.readdirSync('./temp')
 } catch (error) {
     try {
         fs.mkdirSync('./downloads')
-    } catch (error) {}
-    try {
-        fs.writeFileSync('./credits.txt', '| 2020 December 5\n| Design and development: Shie1\n| Electron app template: Fireship (https://www.youtube.com/channel/UCsBjURrPoezykLs9EqgamOA)\n| Audio & Video reencoding source code: TimeForANinja (https://github.com/TimeForANinja)\n| Icons: Smashicons from flaticon.com\n| Made with:\n    nodejs\n    ffmpeg\n    jquery\n    ytdl-core\n    electron\n    electron-forge')
     } catch (error) {}
     try {
         fs.mkdirSync('./temp')
@@ -30,11 +30,13 @@ try {
 const createWindow = () => {
     // Create the browser window.
     const mainWindow = new BrowserWindow({
-        width: 800,
-        height: 600,
+        width: width / 2.5,
+        height: height / 2,
+        minWidth: 210,
+        minHeight: 140,
         transparent: true,
         frame: false,
-        resizable: false,
+        resizable: true,
         webPreferences: {
             devTools: false,
             nodeIntegration: true

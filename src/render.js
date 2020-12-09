@@ -7,6 +7,13 @@ const fs = require('fs')
 const ytdl = require('ytdl-core')
 const cp = require('child_process');
 const ffmpeg = require('ffmpeg-static');
+const {
+    width,
+    height
+} = require("screenz");
+
+$(':root').css('--screenH', `${height}px`)
+$(':root').css('--screenW', `${width}px`)
 
 let tracker
 
@@ -160,7 +167,7 @@ async function convert(link) {
     });
     ffmpegProcess.on('close', () => {
         setTimeout(() => {
-            after = cp.execFile('ffmpeg', ['-y', '-i', `${path.resolve('./temp/temp.mp4')}`, '-c:v', 'libx264', '-c:a', 'aac', '-strict', 'experimental', '-tune', 'fastdecode', '-pix_fmt', 'yuv420p', '-b:a', '192k', '-ar', '48000', `${path.resolve('./downloads')}\\${fileName}`])
+            after = cp.spawn(ffmpeg, ['-y', '-i', `${path.resolve('./temp/temp.mp4')}`, '-c:v', 'libx264', '-c:a', 'aac', '-strict', 'experimental', '-tune', 'fastdecode', '-pix_fmt', 'yuv420p', '-b:a', '192k', '-ar', '48000', `${path.resolve('./downloads')}\\${fileName}`])
             after.on('close', () => {
                 clearInterval(progressbar);
                 tracker = undefined
@@ -189,3 +196,12 @@ async function convert(link) {
     video.pipe(ffmpegProcess.stdio[5]);
     ffmpegProcess.stdio[6].pipe(fs.createWriteStream('./temp/temp.mp4'));
 }
+
+window.addEventListener("resize", () => {
+    $(':root').css('--screenH', `${height}px`)
+    $(':root').css('--screenW', `${width}px`)
+    document.body.classList.add("freeze");
+    setTimeout(() => {
+        document.body.classList.remove("freeze");
+    }, 400);
+});
