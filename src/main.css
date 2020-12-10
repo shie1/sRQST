@@ -159,6 +159,11 @@ footer div {
     align-items: center;
 }
 
+footer span {
+    font-size: 3.5vmin;
+    padding: 2.5px;
+}
+
 .dragging {
     filter: blur(2.5px);
 }
@@ -166,8 +171,4 @@ footer div {
 .freeze {
     filter: blur(0.5px);
     filter: opacity(80%);
-}
-
-.freeze footer {
-    display: none;
 }
