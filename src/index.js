@@ -31,6 +31,18 @@ try {
     } catch (error) {}
 }
 
+let dev
+
+try {
+    if (fs.readFileSync('./.devmode') == "true") {
+        dev = true
+    } else {
+        dev = false
+    }
+} catch (error) {
+    dev = false
+}
+
 const createWindow = () => {
     // Create the browser window.
     const mainWindow = new BrowserWindow({
@@ -42,7 +54,7 @@ const createWindow = () => {
         frame: false,
         resizable: true,
         webPreferences: {
-            devTools: false,
+            devTools: dev,
             nodeIntegration: true
         }
     });

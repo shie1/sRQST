@@ -11,9 +11,6 @@ const {
     width,
     height
 } = require("screenz");
-const {
-    title
-} = require('process');
 
 $(':root').css('--screenH', `${height}px`)
 $(':root').css('--screenW', `${width}px`)
