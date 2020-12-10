@@ -7,6 +7,7 @@ const fs = require('fs')
 const ytdl = require('ytdl-core')
 const cp = require('child_process');
 const ffmpeg = require('ffmpeg-static');
+const ytpl = require('ytpl')
 const {
     width,
     height
@@ -22,6 +23,24 @@ let tracker
 let queue = []
 
 const toMB = i => (i / 1024 / 1024).toFixed(2);
+
+async function drag(url) {
+    try {
+        id = await ytpl.getPlaylistID(url.toString())
+        pl = await ytpl(id.toString())
+    } catch (error) {
+        if (ytdl.validateURL(url)) {
+            new Request(url, globalType)
+            return;
+        } else {
+            console.error("Invalid input!")
+            return;
+        }
+    }
+    for (item of pl.items) {
+        new Request(item.shortUrl, globalType)
+    }
+}
 
 function Request(url, type) {
     if (!ytdl.validateURL(url)) {
@@ -85,7 +104,7 @@ $('#goWeb').click(() => {
 })
 
 $('#clip').click(() => {
-    new Request(clipboard.readText(), globalType)
+    drag(clipboard.readText())
 })
 
 $('#downloads').click(() => {
@@ -109,7 +128,7 @@ $(".content").on("drop", async function(event) {
     event.stopPropagation();
     $(this).removeClass('dragging')
     url = event.originalEvent.dataTransfer.getData('url')
-    new Request(url, globalType)
+    drag(url)
 });
 
 async function convert(rqst) {
@@ -124,7 +143,7 @@ async function convert(rqst) {
             start: Date.now(),
             audio: {
                 downloaded: 0,
-                total: Infinity
+                total: '?'
             }
         }
         audio = ytdl(rqst.url, {
@@ -163,11 +182,11 @@ async function convert(rqst) {
             start: Date.now(),
             audio: {
                 downloaded: 0,
-                total: Infinity
+                total: '?'
             },
             video: {
                 downloaded: 0,
-                total: Infinity
+                total: '?'
             },
             merged: {
                 frame: 0,

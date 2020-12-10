@@ -51,7 +51,8 @@
         "ffmpeg-static": "^4.2.7",
         "jquery": "^3.5.1",
         "screenz": "latest",
-        "ytdl-core": "^4.1.4"
+        "ytdl-core": "^4.1.4",
+        "ytpl": "^2.0.0-alpha.3"
     },
     "devDependencies": {
         "@electron-forge/cli": "^6.0.0-beta.50",
