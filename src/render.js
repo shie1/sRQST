@@ -97,12 +97,16 @@ $('#clip').click(() => {
     convert(clipboard.readText())
 })
 
+$('#downloads').click(() => {
+    cp.execSync(`explorer.exe ${path.resolve('./downloads/')}`)
+})
+
 async function convert(link) {
     if (!ytdl.validateURL(link)) {
         alert('This is not a YouTube video!', 1500)
         return;
     }
-    title = (await ytdl.getBasicInfo(link)).videoDetails.title.replace(/|/g, '').replace(/"/g, '')
+    vidTitle = (await ytdl.getBasicInfo(link)).videoDetails.title.replace(/|/g, '').replace(/"/g, '')
     tracker = {
         start: Date.now(),
         audio: {
@@ -140,9 +144,9 @@ async function convert(link) {
             };
         });
     progressbar = setInterval(() => {
-        alert(`"${title}" | Running for: ${Math.floor((Date.now() - tracker.start) / 1000)} seconds`);
+        alert(`"${vidTitle}" | Running for: ${Math.floor((Date.now() - tracker.start) / 1000)} seconds`);
     }, 800);
-    fileName = `${title.replace(/[^a-z0-9]/gi, '_').toLowerCase()}.mp4`
+    fileName = `${vidTitle.replace(/[^a-z0-9]/gi, '_').toLowerCase()}.mp4`
     ffmpegProcess = ffmpegProcess = cp.spawn(ffmpeg, [
         // Remove ffmpeg's console spamming
         '-loglevel', '0', '-hide_banner',
@@ -174,9 +178,12 @@ async function convert(link) {
                 fs.unlinkSync('./temp/temp.mp4')
                 setTimeout(() => {
                     alert(`Video successfully converted!`, 2000);
-                    setTimeout(() => {
-                        cp.exec(`start "" "${path.resolve('./downloads')}"`)
-                    }, 2000)
+                    nAlert = new Notification('"' + vidTitle + '" successfully converted!', {
+                        body: "Click here to open the file's location!"
+                    })
+                    nAlert.onclick = () => {
+                        cp.execSync(`explorer.exe /select,${path.resolve(`./downloads/${fileName})}`)}`)
+                    }
                 }, 1000)
             })
         }, 2000)
