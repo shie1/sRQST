@@ -9,7 +9,7 @@
         "package": "electron-forge package",
         "make": "electron-forge make --arch x64 && electron-forge make --arch ia32",
         "publish": "electron-forge publish",
-        "lint": "electron-forge lint"
+        "lint": "echo \"No linting configured\""
     },
     "keywords": [],
     "author": "Shie1",
@@ -49,7 +49,6 @@
         "electron-squirrel-startup": "^1.0.0",
         "ffmpeg-static": "^4.2.7",
         "jquery": "^3.5.1",
-        "screenz": "^1.0.0",
         "ytdl-core": "latest"
     },
     "devDependencies": {
