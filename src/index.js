@@ -16,6 +16,10 @@ if (require('electron-squirrel-startup')) { // eslint-disable-line global-requir
 }
 
 try {
+    fs.unlinkSync('./temp/temp.mp4')
+} catch (error) {}
+
+try {
     fs.readdirSync('./downloads')
     fs.readdirSync('./temp')
 } catch (error) {
@@ -32,8 +36,8 @@ const createWindow = () => {
     const mainWindow = new BrowserWindow({
         width: width / 2.5,
         height: height / 2,
-        minWidth: 210,
-        minHeight: 140,
+        minWidth: 290,
+        minHeight: 160,
         transparent: true,
         frame: false,
         resizable: true,
