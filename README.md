@@ -10,4 +10,4 @@ To convert a video, simply drag and drop one to the app, or copy it's URL and cl
 - Electron app template: [Fireship](https://www.youtube.com/channel/UCsBjURrPoezykLs9EqgamOA)
 - Audio & Video reencoding source code: [TimeForANinja](https://github.com/TimeForANinja)
 - Icons: Smashicons from flaticon.com
-- Made with: nodejs, screenz, ffmpeg, jquery, ytdl-core, ytpl, electron, electron-forge
+- Made with: nodejs, screenz, ffmpeg, jquery, ytdl-core, ytpl, electron, electron-forge, nircmd
