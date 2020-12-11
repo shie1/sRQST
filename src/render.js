@@ -137,8 +137,8 @@ async function convert(rqst) {
     }
     vidInfo = await ytdl.getBasicInfo(rqst.url)
     rqst.title = vidInfo.videoDetails.title.replace(/"/g, '').replace(/|/g, '')
-    fileName = `${rqst.title.replace(/[^a-z0-9]/gi, '_').toLowerCase()}.mp3`
     if (rqst.type == "mp3") {
+        fileName = `${rqst.title.replace(/[^a-z0-9]/gi, '_').toLowerCase()}.mp3`
         tracker = {
             start: Date.now(),
             audio: {
@@ -178,6 +178,7 @@ async function convert(rqst) {
             })
         })
     } else {
+        fileName = `${rqst.title.replace(/[^a-z0-9]/gi, '_').toLowerCase()}.mp4`
         tracker = {
             start: Date.now(),
             audio: {
