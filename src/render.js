@@ -34,13 +34,13 @@ if (globalType === "mp3") {
     $('#togType img').attr('src', 'icons/video-camera-1.svg')
 }
 
-function writeStorage(name, data){
+function writeStorage(name, data) {
     storage[name] = data
     fs.writeFileSync('./storage.json', JSON.stringify(storage))
     return true
 }
 
-function delStorage(name){
+function delStorage(name) {
     delete storage[name]
     fs.writeFileSync('./storage.json', JSON.stringify(storage))
     return true
@@ -181,15 +181,15 @@ async function convert(rqst) {
             }).pipe(fs.createWriteStream('./temp/temp.mp4'))
         progressbar = setInterval(() => {
             let prog
-            if(tracker.audio.downloaded != tracker.audio.total){
+            if (tracker.audio.downloaded != tracker.audio.total) {
                 prog = `${toMB(tracker.audio.downloaded)}MB/${toMB(tracker.audio.total)}MB`
-            }else{
+            } else {
                 prog = 'Processing'
             }
             $('.sidebar').find('.item').first().find('span').first().text(`Audio | ${prog} | ${Math.floor((Date.now() - tracker.start) / 1000)}s`);
         }, 800);
         audio.on('close', () => {
-            tomp3 = cp.spawn(ffmpeg, ['-i', path.resolve('./temp/temp.mp4'), '-c:a', 'libmp3lame', '-q:a', '2', `${path.resolve('./downloads')}\\${fileName}`])
+            tomp3 = cp.spawn(ffmpeg, ['-y', '-i', path.resolve('./temp/temp.mp4'), '-c:a', 'libmp3lame', '-q:a', '2', `${path.resolve('./downloads')}\\${fileName}`])
             tomp3.on('close', () => {
                 clearInterval(progressbar);
                 tracker = undefined
@@ -201,7 +201,7 @@ async function convert(rqst) {
                         body: "Click here to open the file's location!"
                     })
                     nAlert.onclick = () => {
-                        cp.exec(`explorer.exe/select,${path.resolve(`./downloads/${fileName}`)}`)
+                        cp.execSync(`explorer.exe ${path.resolve('./downloads/')}`)
                     }
                 }, 1000)
             })
@@ -246,9 +246,9 @@ async function convert(rqst) {
             });
         progressbar = setInterval(() => {
             let prog
-            if(tracker.audio.downloaded + tracker.video.downloaded != tracker.audio.total + tracker.video.total){
+            if (tracker.audio.downloaded + tracker.video.downloaded != tracker.audio.total + tracker.video.total) {
                 prog = `${toMB(tracker.audio.downloaded + tracker.video.downloaded)}MB/${toMB(tracker.audio.total + tracker.video.total)}MB`
-            }else{
+            } else {
                 prog = 'Processing'
             }
             $('.sidebar').find('.item').first().find('span').first().text(`Video | ${prog} | ${Math.floor((Date.now() - tracker.start) / 1000)}s`);
@@ -289,7 +289,7 @@ async function convert(rqst) {
                             body: "Click here to open the file's location!"
                         })
                         nAlert.onclick = () => {
-                            cp.exec(`explorer.exe/select,${path.resolve(`./downloads/${fileName}`)}`)
+                            cp.execSync(`explorer.exe ${path.resolve('./downloads/')}`)
                         }
                     }, 1000)
                 })
