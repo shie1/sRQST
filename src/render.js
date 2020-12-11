@@ -1,6 +1,8 @@
 const {
+    clipboard,
     remote,
-    clipboard
+    WebContents,
+    session
 } = require('electron')
 const path = require('path');
 const fs = require('fs')
@@ -13,16 +15,36 @@ const {
     height
 } = require("screenz");
 
+let storage = JSON.parse(fs.readFileSync('./storage.json'))
+
 $(':root').css('--screenH', `${height}px`)
 $(':root').css('--screenW', `${width}px`)
 
-let globalType = "mp4"
+let globalType = storage.globalType
 
 let tracker
 
 let queue = []
 
 const toMB = i => (i / 1024 / 1024).toFixed(2);
+
+if (globalType === "mp3") {
+    $('#togType img').attr('src', 'icons/speaker-4.svg')
+} else {
+    $('#togType img').attr('src', 'icons/video-camera-1.svg')
+}
+
+function writeStorage(name, data){
+    storage[name] = data
+    fs.writeFileSync('./storage.json', JSON.stringify(storage))
+    return true
+}
+
+function delStorage(name){
+    delete storage[name]
+    fs.writeFileSync('./storage.json', JSON.stringify(storage))
+    return true
+}
 
 async function drag(url) {
     try {
@@ -97,6 +119,7 @@ $('#togType').click(() => {
         $('#togType img').attr('src', 'icons/video-camera-1.svg')
         globalType = "mp4"
     }
+    writeStorage('globalType', globalType)
 })
 
 $('#goWeb').click(() => {
@@ -111,19 +134,19 @@ $('#downloads').click(() => {
     cp.execSync(`explorer.exe ${path.resolve('./downloads/')}`)
 })
 
-$(".content").on("dragover", function(event) {
+$(".content").on("dragover", function (event) {
     event.preventDefault();
     event.stopPropagation();
     $(this).addClass('dragging');
 });
 
-$(".content").on("dragleave", function(event) {
+$(".content").on("dragleave", function (event) {
     event.preventDefault();
     event.stopPropagation();
     $(this).removeClass('dragging');
 });
 
-$(".content").on("drop", async function(event) {
+$(".content").on("drop", async function (event) {
     event.preventDefault();
     event.stopPropagation();
     $(this).removeClass('dragging')
@@ -147,9 +170,9 @@ async function convert(rqst) {
             }
         }
         audio = ytdl(rqst.url, {
-                filter: 'audioonly',
-                quality: 'highestaudio'
-            })
+            filter: 'audioonly',
+            quality: 'highestaudio'
+        })
             .on('progress', (_, downloaded, total) => {
                 tracker.audio = {
                     downloaded,
@@ -157,7 +180,13 @@ async function convert(rqst) {
                 };
             }).pipe(fs.createWriteStream('./temp/temp.mp4'))
         progressbar = setInterval(() => {
-            $('.sidebar').find('.item').first().find('span').first().text(`Audio | ${toMB(tracker.audio.downloaded)}MB/${toMB(tracker.audio.total)}MB | ${Math.floor((Date.now() - tracker.start) / 1000)}s`);
+            let prog
+            if(tracker.audio.downloaded != tracker.audio.total){
+                prog = `${toMB(tracker.audio.downloaded)}MB/${toMB(tracker.audio.total)}MB`
+            }else{
+                prog = 'Processing'
+            }
+            $('.sidebar').find('.item').first().find('span').first().text(`Audio | ${prog} | ${Math.floor((Date.now() - tracker.start) / 1000)}s`);
         }, 800);
         audio.on('close', () => {
             tomp3 = cp.spawn(ffmpeg, ['-i', path.resolve('./temp/temp.mp4'), '-c:a', 'libmp3lame', '-q:a', '2', `${path.resolve('./downloads')}\\${fileName}`])
@@ -196,9 +225,9 @@ async function convert(rqst) {
             },
         };
         audio = ytdl(rqst.url, {
-                filter: 'audioonly',
-                quality: 'highestaudio'
-            })
+            filter: 'audioonly',
+            quality: 'highestaudio'
+        })
             .on('progress', (_, downloaded, total) => {
                 tracker.audio = {
                     downloaded,
@@ -206,9 +235,9 @@ async function convert(rqst) {
                 };
             });
         video = ytdl(rqst.url, {
-                filter: 'videoonly',
-                quality: 'highestvideo'
-            })
+            filter: 'videoonly',
+            quality: 'highestvideo'
+        })
             .on('progress', (_, downloaded, total) => {
                 tracker.video = {
                     downloaded,
@@ -216,7 +245,13 @@ async function convert(rqst) {
                 };
             });
         progressbar = setInterval(() => {
-            $('.sidebar').find('.item').first().find('span').first().text(`Video | ${toMB(tracker.audio.downloaded + tracker.video.downloaded)}MB/${toMB(tracker.audio.total + tracker.video.total)}MB | ${Math.floor((Date.now() - tracker.start) / 1000)}s`);
+            let prog
+            if(tracker.audio.downloaded + tracker.video.downloaded != tracker.audio.total + tracker.video.total){
+                prog = `${toMB(tracker.audio.downloaded + tracker.video.downloaded)}MB/${toMB(tracker.audio.total + tracker.video.total)}MB`
+            }else{
+                prog = 'Processing'
+            }
+            $('.sidebar').find('.item').first().find('span').first().text(`Video | ${prog} | ${Math.floor((Date.now() - tracker.start) / 1000)}s`);
         }, 800);
         ffmpegProcess = cp.spawn(ffmpeg, [
             // Remove ffmpeg's console spamming
@@ -289,7 +324,5 @@ window.addEventListener("resize", () => {
 setInterval(() => {
     if (!tracker && queue.length > 0) {
         convert(queue[0])
-    } else {
-        return
     }
 }, 10000)

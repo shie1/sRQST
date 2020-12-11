@@ -17,7 +17,7 @@ if (require('electron-squirrel-startup')) { // eslint-disable-line global-requir
 
 try {
     fs.unlinkSync('./temp/temp.mp4')
-} catch (error) {}
+} catch (error) { }
 
 try {
     fs.readdirSync('./downloads')
@@ -25,10 +25,18 @@ try {
 } catch (error) {
     try {
         fs.mkdirSync('./downloads')
-    } catch (error) {}
+    } catch (error) { }
     try {
         fs.mkdirSync('./temp')
-    } catch (error) {}
+    } catch (error) { }
+}
+
+try{
+    fs.readFileSync('./storage.json')
+}catch{
+    try {
+        fs.writeFileSync('./storage.json', '{"globalType": "mp4"}')
+    } catch (error) { }
 }
 
 let dev
