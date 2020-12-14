@@ -99,7 +99,6 @@ async function sidebar(rqst) {
 }
 
 $('#closeApp').click(() => {
-    $('footer').remove();
     $('.content').css('animation', 'wrap 0.5s infinite')
     setTimeout(() => {
         $('.content').remove();
