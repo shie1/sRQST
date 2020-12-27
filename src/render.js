@@ -133,19 +133,19 @@ $('#downloads').click(() => {
     cp.execSync(`explorer.exe ${path.resolve('./downloads/')}`)
 })
 
-$(".content").on("dragover", function (event) {
+$(".content").on("dragover", function(event) {
     event.preventDefault();
     event.stopPropagation();
     $(this).addClass('dragging');
 });
 
-$(".content").on("dragleave", function (event) {
+$(".content").on("dragleave", function(event) {
     event.preventDefault();
     event.stopPropagation();
     $(this).removeClass('dragging');
 });
 
-$(".content").on("drop", async function (event) {
+$(".content").on("drop", async function(event) {
     event.preventDefault();
     event.stopPropagation();
     $(this).removeClass('dragging')
@@ -169,9 +169,9 @@ async function convert(rqst) {
             }
         }
         audio = ytdl(rqst.url, {
-            filter: 'audioonly',
-            quality: 'highestaudio'
-        })
+                filter: 'audioonly',
+                quality: 'highestaudio'
+            })
             .on('progress', (_, downloaded, total) => {
                 tracker.audio = {
                     downloaded,
@@ -224,9 +224,9 @@ async function convert(rqst) {
             },
         };
         audio = ytdl(rqst.url, {
-            filter: 'audioonly',
-            quality: 'highestaudio'
-        })
+                filter: 'audioonly',
+                quality: 'highestaudio'
+            })
             .on('progress', (_, downloaded, total) => {
                 tracker.audio = {
                     downloaded,
@@ -234,9 +234,9 @@ async function convert(rqst) {
                 };
             });
         video = ytdl(rqst.url, {
-            filter: 'videoonly',
-            quality: 'highestvideo'
-        })
+                filter: 'videoonly',
+                quality: 'highestvideo'
+            })
             .on('progress', (_, downloaded, total) => {
                 tracker.video = {
                     downloaded,
