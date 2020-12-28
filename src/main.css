@@ -219,3 +219,10 @@ header div div span {
 .freeze .sidebar {
     filter: opacity(0);
 }
+
+.ver {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    color: #F9F871;
+}

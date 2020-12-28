@@ -15,7 +15,26 @@ const {
     height
 } = require("screenz");
 
+try {
+    if (fs.readFileSync('./.devmode') == "true") {
+        dev = true
+    } else {
+        dev = false
+    }
+} catch (error) {
+    dev = false
+}
+
+if (dev) {
+    root = "./"
+} else {
+    root = "./resources/app/"
+}
+
 let storage = JSON.parse(fs.readFileSync('./storage.json'))
+let app = JSON.parse(fs.readFileSync(root + 'package.json'))
+
+$('.ver').html('v' + app.version)
 
 $(':root').css('--screenH', `${height}px`)
 $(':root').css('--screenW', `${width}px`)
