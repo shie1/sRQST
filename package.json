@@ -1,7 +1,7 @@
 {
     "name": "srqst",
     "productName": "sRQST",
-    "version": "1.2.1",
+    "version": "1.2.2",
     "description": "Simple YouTube converter",
     "main": "src/index.js",
     "scripts": {
@@ -46,6 +46,7 @@
         }
     },
     "dependencies": {
+        "discord-rpc": "^3.1.4",
         "electron-squirrel-startup": "^1.0.0",
         "ffmpeg-static": "^4.2.7",
         "jquery": "^3.5.1",
