@@ -4,7 +4,7 @@ const {
 } = require('electron');
 const path = require('path');
 const fs = require('fs')
-const cp = require('child_process')
+
 const {
     width,
     height
@@ -17,7 +17,7 @@ if (require('electron-squirrel-startup')) { // eslint-disable-line global-requir
 
 try {
     fs.unlinkSync('./temp/temp.mp4')
-} catch (error) { }
+} catch (error) {}
 
 try {
     fs.readdirSync('./downloads')
@@ -25,18 +25,18 @@ try {
 } catch (error) {
     try {
         fs.mkdirSync('./downloads')
-    } catch (error) { }
+    } catch (error) {}
     try {
         fs.mkdirSync('./temp')
-    } catch (error) { }
+    } catch (error) {}
 }
 
-try{
+try {
     fs.readFileSync('./storage.json')
-}catch{
+} catch {
     try {
-        fs.writeFileSync('./storage.json', '{"globalType": "mp4"}')
-    } catch (error) { }
+        fs.writeFileSync('./storage.json', '{"globalType": "mp4", "quality": "1080p"}')
+    } catch (error) {}
 }
 
 let dev
