@@ -1,7 +1,7 @@
 {
     "name": "srqst",
     "productName": "sRQST",
-    "version": "1.2.2",
+    "version": "1.2.3",
     "description": "Simple YouTube converter",
     "main": "src/index.js",
     "scripts": {

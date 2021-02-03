@@ -1,5 +1,6 @@
 const {
-    clipboard
+    clipboard,
+    remote
 } = require('electron')
 const path = require('path');
 const fs = require('fs')
@@ -52,6 +53,8 @@ let tracker
 let queue = []
 
 let state
+
+let onTop = false
 
 const toMB = i => (i / 1024 / 1024).toFixed(2);
 
@@ -232,6 +235,17 @@ $('#clip').click(() => {
 
 $('#downloads').click(() => {
     cp.execSync(`explorer.exe ${path.resolve('./downloads/')}`)
+})
+
+$('#onTop').on('click', () => {
+    if (!onTop) {
+        $('#onTop').addClass('on')
+        remote.BrowserWindow.getAllWindows()[0].setAlwaysOnTop(true, 'screen')
+    } else {
+        $('#onTop').removeClass('on')
+        remote.BrowserWindow.getAllWindows()[0].setAlwaysOnTop(false)
+    }
+    onTop = !onTop
 })
 
 $(".content").on("dragover", function(event) {
