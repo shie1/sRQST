@@ -298,11 +298,8 @@ async function convert(rqst) {
                     queue.splice(0, 1);
                     $('.sidebar').find('.item').first().remove();
                     nAlert = new Notification('"' + rqst.title + '" successfully converted!', {
-                        body: "Click here to open the file's location!"
+                        body: "Click on the folder icon, to check it out!"
                     })
-                    nAlert.onclick = () => {
-                        cp.execSync(`explorer.exe ${path.resolve('./downloads/')}`)
-                    }
                 }, 1000)
             })
         })
@@ -386,11 +383,8 @@ async function convert(rqst) {
                         queue.splice(0, 1);
                         $('.sidebar').find('.item').first().remove();
                         nAlert = new Notification('"' + rqst.title + '" successfully converted!', {
-                            body: "Click here to open the file's location!"
+                            body: "Click on the folder icon, to check it out!"
                         })
-                        nAlert.onclick = () => {
-                            cp.execSync(`explorer.exe ${path.resolve('./downloads/')}`)
-                        }
                     }, 1000)
                 })
             }, 2000)

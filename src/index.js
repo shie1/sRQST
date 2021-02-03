@@ -35,7 +35,7 @@ try {
     fs.readFileSync('./storage.json')
 } catch {
     try {
-        fs.writeFileSync('./storage.json', '{"globalType": "mp4", "quality": "1080p"}')
+        fs.writeFileSync('./storage.json', '{"globalType": "mp4", "quality": "137"}')
     } catch (error) {}
 }
 
