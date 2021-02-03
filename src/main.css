@@ -95,7 +95,6 @@ header div div span {
 }
 
 #closeApp {
-    cursor: pointer;
     transition: 100ms;
 }
 
@@ -104,7 +103,6 @@ header div div span {
 }
 
 .headerB {
-    cursor: pointer;
     transition: 100ms;
 }
 
@@ -225,4 +223,15 @@ header div div span {
     left: 0;
     bottom: 0;
     color: #F9F871;
+}
+
+select {
+    color: #F9F871;
+    background-color: transparent;
+    border: none;
+    font-size: 1.25rem;
+}
+
+option {
+    background-color: #3D3D45;
 }
