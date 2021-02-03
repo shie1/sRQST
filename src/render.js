@@ -1,8 +1,5 @@
 const {
-    clipboard,
-    remote,
-    WebContents,
-    session
+    clipboard
 } = require('electron')
 const path = require('path');
 const fs = require('fs')
@@ -14,6 +11,13 @@ const {
     width,
     height
 } = require("screenz");
+const DCRPC = require('discord-rpc')
+
+const clientId = "805158215876345927"
+const applaunch = Date.now()
+
+DCRPC.register(clientId);
+const RPC = new DCRPC.Client({ transport: 'ipc' });
 
 try {
     if (fs.readFileSync('./.devmode') == "true") {
@@ -41,17 +45,73 @@ $(':root').css('--screenW', `${width}px`)
 
 let globalType = storage.globalType
 
+let quality = storage.quality
+
 let tracker
 
 let queue = []
 
+let state
+
 const toMB = i => (i / 1024 / 1024).toFixed(2);
+
+$('#quality').val(quality)
 
 if (globalType === "mp3") {
     $('#togType img').attr('src', 'icons/speaker-4.svg')
 } else {
     $('#togType img').attr('src', 'icons/video-camera-1.svg')
 }
+
+function rIdle() {
+    RPC.setActivity({
+        details: 'v' + app.version,
+        state: "Idle",
+        startTimestamp: applaunch,
+        largeImageKey: 'icon_min',
+        largeImageText: 'sRequest',
+        smallImageKey: 'icon',
+        smallImageText: 'Idle',
+        instance: false,
+    });
+}
+
+function rConv() {
+    RPC.setActivity({
+        details: 'v' + app.version,
+        state: "Converting a video",
+        startTimestamp: tracker.start,
+        largeImageKey: 'icon_min',
+        largeImageText: 'sRequest',
+        smallImageKey: 'icon',
+        smallImageText: 'Converting a video',
+        instance: false,
+    });
+}
+
+RPC.on('ready', () => {
+    switch (state) {
+        case 1:
+            rIdle()
+            break
+        case 2:
+            rConv()
+            break
+    }
+    setInterval(() => {
+        if (tracker) { state = 2 } else { state = 1 }
+        switch (state) {
+            case 1:
+                rIdle()
+                break
+            case 2:
+                rConv()
+                break
+        }
+    }, 15e3);
+});
+
+RPC.login({ clientId }).catch(console.error);
 
 function writeStorage(name, data) {
     storage[name] = data
@@ -63,6 +123,23 @@ function delStorage(name) {
     delete storage[name]
     fs.writeFileSync('./storage.json', JSON.stringify(storage))
     return true
+}
+
+function cq(q) {
+    switch (q) {
+        case '137':
+            return "1080p (AVC1)"
+        case '248':
+            return "1080p (VP9)"
+        case '136':
+            return "720p (AVC1)"
+        case '247':
+            return "720p (VP9)"
+        case '135':
+            return "480p (AVC1)"
+        default:
+            return "Video"
+    }
 }
 
 async function drag(url) {
@@ -138,6 +215,11 @@ $('#togType').click(() => {
         globalType = "mp4"
     }
     writeStorage('globalType', globalType)
+})
+
+$('#quality').on('change', () => {
+    quality = $('#quality').val()
+    writeStorage('quality', quality)
 })
 
 $('#goWeb').click(() => {
@@ -254,7 +336,7 @@ async function convert(rqst) {
             });
         video = ytdl(rqst.url, {
                 filter: 'videoonly',
-                quality: 'highestvideo'
+                quality: quality
             })
             .on('progress', (_, downloaded, total) => {
                 tracker.video = {
@@ -269,7 +351,7 @@ async function convert(rqst) {
             } else {
                 prog = 'Processing'
             }
-            $('.sidebar').find('.item').first().find('span').first().text(`Video | ${prog} | ${Math.floor((Date.now() - tracker.start) / 1000)}s`);
+            $('.sidebar').find('.item').first().find('span').first().text(`${cq(quality)} | ${prog} | ${Math.floor((Date.now() - tracker.start) / 1000)}s`);
         }, 800);
         ffmpegProcess = cp.spawn(ffmpeg, [
             // Remove ffmpeg's console spamming
