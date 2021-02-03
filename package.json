@@ -22,8 +22,7 @@
             "packagerConfig": {
                 "icon": "icon.ico"
             },
-            "makers": [
-                {
+            "makers": [{
                     "name": "@electron-forge/maker-squirrel",
                     "config": {
                         "name": "sRQST"
