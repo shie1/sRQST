@@ -93,6 +93,7 @@ function rConv() {
 }
 
 RPC.on('ready', () => {
+    if (tracker) { state = 2 } else { state = 1 }
     switch (state) {
         case 1:
             rIdle()
@@ -141,7 +142,7 @@ function cq(q) {
         case '135':
             return "480p (AVC1)"
         default:
-            return "Video"
+            return "Highest"
     }
 }
 
@@ -193,7 +194,7 @@ function Request(url, type) {
 async function sidebar(rqst) {
     vidInfo = await ytdl.getBasicInfo(rqst.url)
     rqst.title = vidInfo.videoDetails.title.replace(/"/g, '').replace(/|/g, '')
-    rqst.thumb = `https://img.youtube.com/vi/${vidInfo.videoDetails.videoId}/maxresdefault.jpg`
+    rqst.thumb = `https://img.youtube.com/vi/${vidInfo.videoDetails.videoId}/hqdefault.jpg`
     $('.sidebar').append(`<div class="item"> <img src="${rqst.thumb}"> <span>In Queue</span> </div>`);
 }
 
@@ -234,7 +235,7 @@ $('#clip').click(() => {
 })
 
 $('#downloads').click(() => {
-    cp.execSync(`explorer.exe ${path.resolve('./downloads/')}`)
+    try { cp.execSync(`explorer.exe ${path.resolve('./downloads/')}`) } catch {}
 })
 
 $('#onTop').on('click', () => {
@@ -272,8 +273,12 @@ async function convert(rqst) {
     if (tracker) {
         return;
     }
-    vidInfo = await ytdl.getBasicInfo(rqst.url)
+    vidInfo = await ytdl.getInfo(rqst.url)
     rqst.title = vidInfo.videoDetails.title.replace(/"/g, '').replace(/|/g, '')
+    try { ytdl.chooseFormat(vidInfo.formats, { quality: quality }); } catch {
+        console.warn("Video quality too high, converting video in best possible quality instead!")
+        quality = "highestvideo"
+    }
     if (rqst.type == "mp3") {
         fileName = `${rqst.title.replace(/[^a-z0-9]/gi, '_').toLowerCase()}.mp3`
         tracker = {
@@ -303,7 +308,6 @@ async function convert(rqst) {
             $('.sidebar').find('.item').first().find('span').first().text(`Audio | ${prog} | ${Math.floor((Date.now() - tracker.start) / 1000)}s`);
         }, 800);
         audio.on('close', () => {
-            tomp3 = cp.spawn(ffmpeg, ['-y', '-i', path.resolve('./temp/temp.mp4'), '-c:a', 'libmp3lame', '-q:a', '2', `${path.resolve('./downloads')}\\${fileName}`])
             tomp3.on('close', () => {
                 clearInterval(progressbar);
                 tracker = undefined

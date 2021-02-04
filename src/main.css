@@ -22,6 +22,7 @@
     --header-size: calc(var(--screenH) / 34);
     --sidebarCW: 2.5vw;
     --sidebarIH: 10vh;
+    --confText: 6vmin;
 }
 
 * {
@@ -197,12 +198,13 @@ header div div span {
     overflow: auto;
 }
 
-.concode .mid {
-    font-size: 14vmin
+.concode .up {
+    font-size: var(--confText);
 }
 
-.concode .up {
-    font-size: 8vmin;
+.concode div {
+    margin: 0;
+    padding: 1vmin;
 }
 
 .dragging {
@@ -229,13 +231,14 @@ select {
     color: #F9F871;
     background-color: transparent;
     border: none;
-    font-size: 8vmin;
+    font-size: var(--confText);
 }
 
 option {
     background-color: #3D3D45;
 }
 
-.fsize {
-    min-height: 1.2rem;
+p {
+    padding: 0;
+    margin: 0;
 }
