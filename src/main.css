@@ -225,6 +225,7 @@ header div div span {
     left: 0;
     bottom: 0;
     color: #F9F871;
+    font-size: calc(var(--header-size) * .625);
 }
 
 select {
