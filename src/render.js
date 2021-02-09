@@ -308,6 +308,7 @@ async function convert(rqst) {
             $('.sidebar').find('.item').first().find('span').first().text(`Audio | ${prog} | ${Math.floor((Date.now() - tracker.start) / 1000)}s`);
         }, 800);
         audio.on('close', () => {
+            tomp3 = cp.spawn(ffmpeg, ['-y', '-i', path.resolve('./temp/temp.mp4'), '-c:a', 'libmp3lame', '-q:a', '2', `${path.resolve('./downloads')}\\${fileName}`])
             tomp3.on('close', () => {
                 clearInterval(progressbar);
                 tracker = undefined
