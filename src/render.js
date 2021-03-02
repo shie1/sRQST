@@ -469,6 +469,7 @@ setInterval(() => {
 }, 1000)
 
 function sidebarstopadd() {
+    return // Feature disabled
     $('.sidebar').find('.item').first().append('<p id="stop">x</p>')
     $('#stop').on('click', () => { skipQ() })
 }
