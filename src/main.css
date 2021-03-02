@@ -181,9 +181,13 @@ header div div span {
     filter: opacity(100%);
 }
 
-.item img {
+.item div {
     height: calc(var(--sidebarIH) * 0.95);
     margin-right: calc(var(--sidebarCW) / 2);
+}
+
+.item img {
+    height: 100%;
 }
 
 .item span {
@@ -242,4 +246,20 @@ option {
 p {
     padding: 0;
     margin: 0;
+}
+
+#stop {
+    font-size: 10vmin;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    right: 5.5vw;
+    color: rgba(255, 255, 255, 0.5);
+    transition: 100ms;
+    transform: translateY(-1vh);
+}
+
+#stop:hover {
+    color: red;
 }

@@ -12,7 +12,14 @@ const {
     width,
     height
 } = require("screenz");
-const DCRPC = require('discord-rpc')
+const DCRPC = require('discord-rpc');
+const { electron } = require('process');
+
+win = remote.getCurrentWindow()
+
+let after;
+let tomp3;
+let ffmpegProcess;
 
 const clientId = "805158215876345927"
 const applaunch = Date.now()
@@ -146,7 +153,14 @@ function cq(q) {
     }
 }
 
+dragenabled = true
+
 async function drag(url) {
+    if (!dragenabled) { console.warn("Request ignored! (too fast)"); return }
+    dragenabled = false
+    setTimeout(() => {
+        dragenabled = true
+    }, 500);
     try {
         id = await ytpl.getPlaylistID(url.toString())
         pl = await ytpl(id.toString())
@@ -195,10 +209,10 @@ async function sidebar(rqst) {
     vidInfo = await ytdl.getBasicInfo(rqst.url)
     rqst.title = vidInfo.videoDetails.title.replace(/"/g, '').replace(/|/g, '')
     rqst.thumb = `https://img.youtube.com/vi/${vidInfo.videoDetails.videoId}/hqdefault.jpg`
-    $('.sidebar').append(`<div class="item"> <img src="${rqst.thumb}"> <span>In Queue</span> </div>`);
+    $('.sidebar').append(`<div class="item"> <div class="iimg"> <img src="${rqst.thumb}"> </div> <span>In Queue</span> </div>`);
 }
 
-$('#closeApp').click(() => {
+$('#closeApp').on('click', () => {
     $('.content').css('animation', 'wrap 0.5s infinite')
     setTimeout(() => {
         $('.content').remove();
@@ -210,7 +224,7 @@ $('#closeApp').click(() => {
     }, 450);
 })
 
-$('#togType').click(() => {
+$('#togType').on('click', () => {
     if (globalType === "mp4") {
         $('#togType img').attr('src', 'icons/speaker-4.svg')
         globalType = "mp3"
@@ -221,20 +235,20 @@ $('#togType').click(() => {
     writeStorage('globalType', globalType)
 })
 
-$('#quality').on('change', () => {
+$('#quality').on('click', 'change', () => {
     quality = $('#quality').val()
     writeStorage('quality', quality)
 })
 
-$('#goWeb').click(() => {
+$('#goWeb').on('click', () => {
     cp.exec('start "" "https://github.com/shie1/sRQST"')
 })
 
-$('#clip').click(() => {
+$('#clip').on('click', () => {
     drag(clipboard.readText())
 })
 
-$('#downloads').click(() => {
+$('#downloads').on('click', () => {
     try { cp.execSync(`explorer.exe ${path.resolve('./downloads/')}`) } catch {}
 })
 
@@ -270,6 +284,7 @@ $(".content").on("drop", async function(event) {
 });
 
 async function convert(rqst) {
+    var currentQ = quality
     if (tracker) {
         return;
     }
@@ -277,7 +292,7 @@ async function convert(rqst) {
     rqst.title = vidInfo.videoDetails.title.replace(/"/g, '').replace(/|/g, '')
     try { ytdl.chooseFormat(vidInfo.formats, { quality: quality }); } catch {
         console.warn("Video quality too high, converting video in best possible quality instead!")
-        quality = "highestvideo"
+        var currentQ = "highestvideo"
     }
     if (rqst.type == "mp3") {
         fileName = `${rqst.title.replace(/[^a-z0-9]/gi, '_').toLowerCase()}.mp3`
@@ -293,19 +308,24 @@ async function convert(rqst) {
                 quality: 'highestaudio'
             })
             .on('progress', (_, downloaded, total) => {
-                tracker.audio = {
-                    downloaded,
-                    total
-                };
+                try {
+                    tracker.audio = {
+                        downloaded,
+                        total
+                    };
+                } catch {}
             }).pipe(fs.createWriteStream('./temp/temp.mp4'))
+        sidebarstopadd()
         progressbar = setInterval(() => {
-            let prog
-            if (tracker.audio.downloaded != tracker.audio.total) {
-                prog = `${toMB(tracker.audio.downloaded)}MB/${toMB(tracker.audio.total)}MB`
-            } else {
-                prog = 'Processing'
-            }
-            $('.sidebar').find('.item').first().find('span').first().text(`Audio | ${prog} | ${Math.floor((Date.now() - tracker.start) / 1000)}s`);
+            try {
+                let prog
+                if (tracker.audio.downloaded != tracker.audio.total) {
+                    prog = `${toMB(tracker.audio.downloaded)}MB/${toMB(tracker.audio.total)}MB`
+                } else {
+                    prog = 'Processing'
+                }
+                $('.sidebar').find('.item').first().find('span').first().text(`Audio | ${prog} | ${Math.floor((Date.now() - tracker.start) / 1000)}s`);
+            } catch {}
         }, 800);
         audio.on('close', () => {
             tomp3 = cp.spawn(ffmpeg, ['-y', '-i', path.resolve('./temp/temp.mp4'), '-c:a', 'libmp3lame', '-q:a', '2', `${path.resolve('./downloads')}\\${fileName}`])
@@ -345,29 +365,36 @@ async function convert(rqst) {
                 quality: 'highestaudio'
             })
             .on('progress', (_, downloaded, total) => {
-                tracker.audio = {
-                    downloaded,
-                    total
-                };
+                try {
+                    tracker.audio = {
+                        downloaded,
+                        total
+                    };
+                } catch {}
             });
         video = ytdl(rqst.url, {
                 filter: 'videoonly',
-                quality: quality
+                quality: currentQ
             })
             .on('progress', (_, downloaded, total) => {
-                tracker.video = {
-                    downloaded,
-                    total
-                };
+                try {
+                    tracker.video = {
+                        downloaded,
+                        total
+                    };
+                } catch {}
             });
+        sidebarstopadd()
         progressbar = setInterval(() => {
-            let prog
-            if (tracker.audio.downloaded + tracker.video.downloaded != tracker.audio.total + tracker.video.total) {
-                prog = `${toMB(tracker.audio.downloaded + tracker.video.downloaded)}MB/${toMB(tracker.audio.total + tracker.video.total)}MB`
-            } else {
-                prog = 'Processing'
-            }
-            $('.sidebar').find('.item').first().find('span').first().text(`${cq(quality)} | ${prog} | ${Math.floor((Date.now() - tracker.start) / 1000)}s`);
+            try {
+                let prog
+                if (tracker.audio.downloaded + tracker.video.downloaded != tracker.audio.total + tracker.video.total) {
+                    prog = `${toMB(tracker.audio.downloaded + tracker.video.downloaded)}MB/${toMB(tracker.audio.total + tracker.video.total)}MB`
+                } else {
+                    prog = 'Processing'
+                }
+                $('.sidebar').find('.item').first().find('span').first().text(`${cq(quality)} | ${prog} | ${Math.floor((Date.now() - tracker.start) / 1000)}s`);
+            } catch {}
         }, 800);
         ffmpegProcess = cp.spawn(ffmpeg, [
             // Remove ffmpeg's console spamming
@@ -410,14 +437,15 @@ async function convert(rqst) {
         });
 
         ffmpegProcess.stdio[3].on('data', chunk => {
-            // Parse the param=value list returned by ffmpeg
-            const lines = chunk.toString().trim().split('\n');
-            const args = {};
-            for (const l of lines) {
-                const [key, value] = l.trim().split('=');
-                args[key] = value;
-            }
-            tracker.merged = args;
+            try {
+                const lines = chunk.toString().trim().split('\n');
+                const args = {};
+                for (const l of lines) {
+                    const [key, value] = l.trim().split('=');
+                    args[key] = value;
+                }
+                tracker.merged = args;
+            } catch {}
         });
         audio.pipe(ffmpegProcess.stdio[4]);
         video.pipe(ffmpegProcess.stdio[5]);
@@ -438,4 +466,21 @@ setInterval(() => {
     if (!tracker && queue.length > 0) {
         convert(queue[0])
     }
-}, 10000)
+}, 1000)
+
+function sidebarstopadd() {
+    $('.sidebar').find('.item').first().append('<p id="stop">x</p>')
+    $('#stop').on('click', () => { skipQ() })
+}
+
+function skipQ() {
+    $('.sidebar').find('.item').first().find('#stop').first().remove()
+    $('.sidebar').find('.item').first().fadeOut('fast')
+    setTimeout(() => {
+        tomp3 = undefined;
+        ffmpegProcess = undefined;
+        after = undefined;
+        tracker = undefined;
+        $('.sidebar').find('.item').first().remove();
+    }, 3000)
+}
