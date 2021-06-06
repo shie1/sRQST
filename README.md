@@ -1,3 +1,5 @@
+UPDATE: This project moved to [shie1/reQuest](https://github.com/shie1/reQuest)
+
 # sRQST
 A minimalistic, easy to use YouTube converter
 ## How to use
